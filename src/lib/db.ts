@@ -6,8 +6,14 @@ import { RedisStorage } from './redis.db';
 import { Favorite, IStorage, PlayRecord, SkipConfig } from './types';
 import { UpstashRedisStorage } from './upstash.db';
 
-// storage type 常量: 'localstorage' | 'redis' | 'd1' | 'upstash'，默认 'localstorage'
-const STORAGE_TYPE = 'd1' as any;
+// storage type 常量
+const STORAGE_TYPE =
+  (process.env.NEXT_PUBLIC_STORAGE_TYPE as
+    | 'localstorage'
+    | 'redis'
+    | 'd1'
+    | 'upstash'
+    | undefined) || 'localstorage';
 
 // 创建存储实例
 function createStorage(): IStorage {
@@ -20,9 +26,18 @@ function createStorage(): IStorage {
       return new D1Storage();
     case 'localstorage':
     default:
-      // 默认返回内存实现，保证本地开发可用
       return null as unknown as IStorage;
   }
+}
+
+// 单例存储实例
+let storageInstance: IStorage | null = null;
+
+export function getStorage(): IStorage {
+  if (!storageInstance) {
+    storageInstance = createStorage();
+  }
+  return storageInstance;
 }
 
 // 单例存储实例
