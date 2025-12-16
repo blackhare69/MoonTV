@@ -7,7 +7,7 @@ import { Favorite, IStorage, PlayRecord, SkipConfig } from './types';
 import { UpstashRedisStorage } from './upstash.db';
 
 // storage type 常量: 'localstorage' | 'redis' | 'd1' | 'upstash'，默认 'localstorage'
-const STORAGE_TYPE = 'd1';
+const STORAGE_TYPE = 'd1' as any;
 
 // 创建存储实例
 function createStorage(): IStorage {
